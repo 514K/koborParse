@@ -9,6 +9,7 @@ links = []
 with open("links", "r") as f:
     for line in f:
         links.append(line.replace("\n", ""))
+    f.close()
 
 for link in links:
     url = link
@@ -26,20 +27,29 @@ for link in links:
         el[0].find_elements(By.TAG_NAME, "button")[0].click()
         # el[0].click()
         time.sleep(2)
-    el = browser.find_elements(By.CLASS_NAME, "Filtersstyled__FiltersCategoryBtnShow-sc-126zqc3-2")[0]
-    el.click()
-
+    try:
+        el = browser.find_elements(By.CLASS_NAME, "Filtersstyled__FiltersCategoryBtnShow-sc-126zqc3-2")[0]
+        el.click()
+    except:
+        pass
+    
     a_links = []
     els = browser.find_elements(By.CLASS_NAME, "Filtersstyled__FiltersCategory-sc-126zqc3-1")[0].find_elements(By.TAG_NAME, "a")
     for i in els:
         a_links.append(i.get_attribute("href"))
+
+    print(a_links)
     for i in a_links:    
         browser.get(i)
         while browser.title.find("50") != -1:
             browser.refresh()
             time.sleep(2)
 
-        print(browser.find_elements(By.TAG_NAME, "h1"))
+        print(browser.find_elements(By.TAG_NAME, "h1")[0].text)
+        print(i)
+        with open("h1.txt", "a+", encoding="utf8") as f:
+            f.write(browser.find_elements(By.TAG_NAME, "h1")[0].text + ";" + i + "\n")
+            f.close()
     browser.quit()
 
     
